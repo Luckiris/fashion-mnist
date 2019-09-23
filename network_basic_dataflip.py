@@ -17,7 +17,7 @@ datagen = ImageDataGenerator(horizontal_flip=True)
 
 batch_size = 128
 num_classes = 10
-epochs = 100
+epochs = 300
 img_rows, img_cols = 28, 28
 
 if K.image_data_format() == 'channels_first':
@@ -44,8 +44,8 @@ model.add(Conv2D(64, kernel_size=(3, 3), padding='same', input_shape=input_shape
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
-model.add(BatchNormalization())
 model.add(Dense(128, activation='relu'))
+model.add(BatchNormalization())
 
 model.add(Conv2D(128, kernel_size=(3, 3), padding='same'))
 model.add(Conv2D(128, (3, 3), activation='relu'))
@@ -66,10 +66,10 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
-reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
+reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,
                               patience=5, min_lr=0.001)
 
-model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(),
+model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.SGD(),
               metrics=['accuracy'])
 
 model.summary()
