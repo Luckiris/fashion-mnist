@@ -86,6 +86,7 @@ model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                     steps_per_epoch=len(x_train)//batch_size,
                     epochs=epochs,
                     verbose=2,
+                    shuffle=True,
                     callbacks=[reduce_lr, tensorboard])
 
 score = model.evaluate(x_test, y_test, verbose=2)
