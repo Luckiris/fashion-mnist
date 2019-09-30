@@ -69,7 +69,7 @@ model.add(Dense(num_classes, activation='softmax'))
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,
                               patience=5, min_lr=0.001)
 
-model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(),
+model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Nadam(),
               metrics=['accuracy'])
 
 model.summary()
