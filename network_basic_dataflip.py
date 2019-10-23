@@ -67,11 +67,9 @@ model.add(BatchNormalization())
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
-reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1,
+reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.1,
                               patience=5, min_lr=0.001)
 
 model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(),
