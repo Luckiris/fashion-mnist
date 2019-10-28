@@ -4,7 +4,7 @@ from datetime import datetime
 from math import ceil
 
 import keras
-from keras.callbacks import ReduceLROnPlateau, TensorBoard
+from keras.callbacks import ReduceLROnPlateau, TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.datasets import fashion_mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D, BatchNormalization
@@ -66,11 +66,11 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
-reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.1,
-                              patience=5, min_lr=0.001)
-
 model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
+
+reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.2,
+                              patience=5, min_lr=0.001)
 
 model.summary()
 
@@ -78,19 +78,24 @@ date = datetime.now().strftime("%d-%m-%Y - %H-%M-%S")
 
 tensorboard = TensorBoard(log_dir="logs/{}".format(date))
 
-# model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=2, validation_data=(x_test, y_test),
-#          callbacks=[reduce_lr, tensorboard])
+early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=50)
+
+file_path = "best_weights_{}".format(date)
+
+check = ModelCheckpoint(file_path, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=True, mode='min', period=1)
+
+model_json = model.to_json()
+with open("model.json_{}".format(date), "w") as json_file:
+    json_file.write(model_json)
 
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                     validation_data=(x_test, y_test),
                     steps_per_epoch=len(x_train)//batch_size,
                     epochs=epochs,
                     verbose=2,
-                    callbacks=[reduce_lr, tensorboard])
+                    callbacks=[reduce_lr, tensorboard, early_stop, check])
 
 score = model.evaluate(x_test, y_test, verbose=2)
 
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-
-model.save('Test_MNIST_CNN.h5')
