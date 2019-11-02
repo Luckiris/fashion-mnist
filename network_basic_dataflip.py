@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 from datetime import datetime
-from math import ceil
 
 import keras
 from keras.callbacks import ReduceLROnPlateau, TensorBoard, EarlyStopping, ModelCheckpoint
