@@ -65,7 +65,7 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
-model.load_weights('best3')
+model.load_weights('best5')
 model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
@@ -78,7 +78,7 @@ date = datetime.now().strftime("%d-%m-%Y - %H-%M-%S")
 
 tensorboard = TensorBoard(log_dir="logs/{}".format(date))
 
-early_stop = EarlyStopping(monitor='acc', mode='max', verbose=1, patience=5)
+early_stop = EarlyStopping(monitor='acc', mode='max', verbose=1, patience=20)
 
 file_path = "best_weights_{}".format(date)
 
