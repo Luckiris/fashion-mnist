@@ -65,6 +65,7 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
+model.load_weights('best2')
 model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
@@ -77,11 +78,11 @@ date = datetime.now().strftime("%d-%m-%Y - %H-%M-%S")
 
 tensorboard = TensorBoard(log_dir="logs/{}".format(date))
 
-early_stop = EarlyStopping(monitor='val_acc', mode='max', verbose=1, patience=50)
+early_stop = EarlyStopping(monitor='acc', mode='max', verbose=1, patience=5)
 
 file_path = "best_weights_{}".format(date)
 
-check = ModelCheckpoint(file_path, monitor='val_acc', verbose=0, save_best_only=True, save_weights_only=True, mode='max', period=1)
+check = ModelCheckpoint(file_path, monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=True, mode='max', period=1)
 
 model_json = model.to_json()
 with open("model.json_{}".format(date), "w") as json_file:
