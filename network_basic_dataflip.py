@@ -65,7 +65,7 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
-model.load_weights('best5')
+model.load_weights('model_weights.h5')
 model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
